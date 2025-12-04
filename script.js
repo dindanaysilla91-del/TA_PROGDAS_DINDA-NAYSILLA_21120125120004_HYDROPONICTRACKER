@@ -96,27 +96,73 @@ const getDetailedRecommendation = (scoreResult) => {
 //KONSEP MODUL 4: FUNCTION & METHOD
 const addReading = () => {
     const plantName = document.getElementById('plantName').value.trim();
+    const age = parseInt(document.getElementById('age').value); // Ambil nilai usia
     const ph = parseFloat(document.getElementById('ph').value);
     const temp = parseFloat(document.getElementById('temp').value);
     const ppm = parseInt(document.getElementById('ppm').value);
 
 //KONSEP MODUL 2 & 1: PENGKONDISIAN & TIPE DATA (isNaN)
-    if (!plantName || isNaN(ph) || isNaN(temp) || isNaN(ppm)) {
+    if (!plantName || isNaN(ph) || isNaN(temp) || isNaN(ppm) || isNaN(age)) {
         alert("Mohon isi semua data dengan benar.");
         return;
     }
+    
+    // START MODIFIKASI: Validasi usia (harus >= 0)
+    if (age < 0) {
+        alert("Usia (hari) tidak boleh bernilai negatif. Nilai minimal adalah 0.");
+        return;
+    }
+    // END MODIFIKASI
 
+    // ... (sisa fungsi tetap sama) ...
+    
     const scoreResult = calculateDetailedScore(ph, temp, ppm);
     const score = scoreResult.totalScore;
     const statusText = getSimpleStatus(score); 
     const recommendation = getDetailedRecommendation(scoreResult);
 
-    const newReading = { plantName, ph, temp, ppm, score, statusText, recommendation, details: scoreResult.details };
+    // Tambahkan 'age' ke objek newReading
+    const newReading = { plantName, age, ph, temp, ppm, score, statusText, recommendation, details: scoreResult.details };
     historyData.push(newReading);
 
     renderHealthCard(score, statusText, recommendation);
     renderTable(); 
+};
 
+// MODIFIKASI: Fungsi editReading yang menghapus data lama dan mengisi form
+const editReading = (displayIndex) => {
+    const actualIndex = historyData.length - displayIndex;
+    
+    if (actualIndex >= 0 && actualIndex < historyData.length) {
+        const itemToEdit = historyData[actualIndex];
+        
+        // 1. ISI FORM INPUT DENGAN DATA YANG INGIN DIEDIT
+        document.getElementById('plantName').value = itemToEdit.plantName;
+        document.getElementById('ph').value = itemToEdit.ph;
+        document.getElementById('temp').value = itemToEdit.temp;
+        document.getElementById('ppm').value = itemToEdit.ppm;
+        
+        // Tambahan: Isi Type dan Age (jika ada)
+        // document.getElementById('plantType').value = itemToEdit.plantType || '';
+        // document.getElementById('age').value = itemToEdit.age || '';
+
+
+        // 2. HAPUS DATA LAMA DARI ARRAY
+        historyData.splice(actualIndex, 1);
+        
+        // 3. RENDER ULANG TABEL DAN HEALTH CARD
+        renderTable(); 
+        
+        // Perbarui Health Card berdasarkan data terakhir yang tersisa (jika ada)
+        if (historyData.length > 0) {
+            const lastReading = historyData[historyData.length - 1];
+            renderHealthCard(lastReading.score, lastReading.statusText, lastReading.recommendation);
+        } else {
+            renderHealthCard('—', 'Belum ada data.', 'Masukkan data untuk melihat saran dan detail diagnostik.');
+        }
+
+        alert(`Data ke-${displayIndex} (${itemToEdit.plantName}) telah dimuat ke formulir. Silakan koreksi nilainya dan tekan "Tambah Data" untuk menyimpan versi terbaru di posisi teratas.`);
+    }
 };
 
 //KONSEP MODUL 4 & 1: FUNCTION & METHOD, ARRAY 
@@ -146,6 +192,7 @@ const resetData = () => {
     }
 };
 
+ 
 const processNext = () => {
     const queueList = document.getElementById('queueList');
     if (queueList.children.length > 0 && queueList.children[0].textContent.includes(':')) {
@@ -171,6 +218,8 @@ const renderHealthCard = (score, statusText, recommendation) => {
     document.getElementById('statusText').textContent = statusText;
     document.getElementById('recommend').innerHTML = recommendation; 
 };
+
+// MODIFIKASI: Menambahkan tombol Edit di samping Hapus
 const renderTable = () => {
     const historyBody = document.getElementById('historyBody');
     historyBody.innerHTML = '';
@@ -190,6 +239,10 @@ const renderTable = () => {
               <td>${r.ppm} PPM</td>
               <td>${r.statusText} (${r.score})</td>
               <td>
+                <button onclick="editReading(${displayIndex})" 
+                        style="background: none; border: none; color: var(--color-primary); cursor: pointer; font-weight: 600; font-size: 14px; padding: 0 8px 0 0;">
+                    Edit
+                </button>
                 <button onclick="deleteReading(${displayIndex})" 
                         style="background: none; border: none; color: var(--color-danger); cursor: pointer; font-weight: 600; font-size: 14px; padding: 0;">
                     Hapus
@@ -201,6 +254,7 @@ const renderTable = () => {
  
     updateMaintenanceQueue();
 };
+// AKHIR MODIFIKASI renderTable
 
 const renderQueue = (queue) => {
     const queueList = document.getElementById('queueList');
@@ -238,13 +292,10 @@ const updateMaintenanceQueue = () => {
 };
 
 
-
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addBtn').addEventListener('click', addReading);
     
     document.getElementById('resetBtn').addEventListener('click', resetData);
-    document.getElementById('resetBtn').style.opacity = '1'; 
-    document.getElementById('resetBtn').style.cursor = 'pointer'; 
     
     document.getElementById('processBtn').addEventListener('click', processNext);
 

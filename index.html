@@ -60,22 +60,25 @@
 
                 <div style="margin-top:20px; display:flex; align-items:center;">
                     <button class="btn btn-add" id="addBtn">Tambah Data</button>
-                    <button class="btn btn-reset" id="resetBtn" style="opacity:0.5; cursor:default;">Reset</button>
                 </div>
             </div>
 
             <div class="card table-wrap" style="margin-top:18px;">
-                <h2 style="margin-top:0">Riwayat Pemantauan</h2>
-                <table aria-live="polite">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Tanaman</th>
-                            <th>pH</th>
-                            <th>Suhu (°C)</th>
-                            <th>Nutrisi</th>
-                            <th>Kondisi (Skor)</th>
-                            <th>Aksi</th>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0;">Riwayat Pemantauan</h2>
+                <button class="btn btn-reset btn-small" id="resetBtn">Reset Riwayat</button>
+            </div>
+            
+            <table aria-live="polite">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Tanaman</th>
+                        <th>pH</th>
+                        <th>Suhu (°C)</th>
+                        <th>Nutrisi</th>
+                        <th>Kondisi (Skor)</th>
+                        <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="historyBody"></tbody>

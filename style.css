@@ -115,6 +115,15 @@ h1 {
     margin-left: 8px;
 }
 
+.btn-small {
+    padding: 8px 10px !important;
+    font-size: 14px;
+}
+
+.btn-reset {
+    background: var(--color-danger);
+    box-shadow: none;
+}
 
 /* 4. FORM (INPUT)*/
 
