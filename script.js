@@ -1,4 +1,4 @@
-// KONSEP MODUL 1: VARIABEL & TIPE DATA : menyimpan nilai const untuk perhitungan
+// KONSEP MODUL 1: VARIABEL & TIPE DATA 
 const IDEAL = {
     PH_MIN: 5.5,
     PH_MAX: 6.5,
@@ -9,22 +9,21 @@ const IDEAL = {
     SCORE_PER_PARAM: 33.333333333
 };
 
-// KONSEP MODUL VARIABEL & TIPE DATA (Array) : tempat penyimpanan data (Struktur Data) yang akan terus bertambah.
+// KONSEP MODUL 1: VARIABEL & TIPE DATA (Array)
 let historyData = []; 
 
-// KONSEP MODUL FUNCTION & METHOD, PENGKONDISIAN : mendapatkan status umum berdasarkan skor total.
+// KONSEP MODUL 2 & 4: FUNCTION & METHOD, PENGKONDISIAN
 const getSimpleStatus = (score) => {
     if (score >= 85) return 'Optimal! ✨';
     if (score >= 60) return 'Baik, Tetapi Perlu Dicek.';
     return 'Kritis! 🚨 Segera periksa.';
 };
 
-//Menghitung skor dan menentukan status detail setiap parameter. Mengembalikan objek yang berisi total skor dan status detail.
 const calculateDetailedScore = (ph, temp, ppm) => {
     let score = 0;
     const details = {}; 
 
-    // --- SKOR PH ---
+    // SKOR PH 
     if (ph >= IDEAL.PH_MIN && ph <= IDEAL.PH_MAX) {
         score += IDEAL.SCORE_PER_PARAM;
         details.phStatus = 'Optimal';
@@ -35,7 +34,7 @@ const calculateDetailedScore = (ph, temp, ppm) => {
         details.phStatus = 'Kritis';
     }
 
-    // --- SKOR SUHU ---
+    // SKOR SUHU
     if (temp >= IDEAL.TEMP_MIN && temp <= IDEAL.TEMP_MAX) {
         score += IDEAL.SCORE_PER_PARAM;
         details.tempStatus = 'Optimal';
@@ -46,7 +45,7 @@ const calculateDetailedScore = (ph, temp, ppm) => {
         details.tempStatus = 'Kritis';
     }
 
-    // --- SKOR PPM ---
+    // SKOR PPM 
     if (ppm >= IDEAL.PPM_MIN && ppm <= IDEAL.PPM_MAX) {
         score += IDEAL.SCORE_PER_PARAM;
         details.ppmStatus = 'Optimal';
@@ -69,7 +68,7 @@ const getDetailedRecommendation = (scoreResult) => {
         return 'Sistem optimal! Pertahankan kondisi ini dengan monitoring harian.';
     }
 
-    let criticalChecks = []; //KONSEP MODUL ARRAY
+    let criticalChecks = []; 
     let adjustmentChecks = [];
 
     if (details.phStatus === 'Kritis') criticalChecks.push('pH Air');
@@ -87,52 +86,48 @@ const getDetailedRecommendation = (scoreResult) => {
     }
 
     if (adjustmentChecks.length > 0) {
-        if (recommendation) recommendation += ' <br> '; // Tambah baris baru jika sudah ada rekomendasi kritis
+        if (recommendation) recommendation += ' <br> '; 
         recommendation += `**Perlu Perhatian:Nilai ${adjustmentChecks.join(', ')} mulai menyimpang, segera lakukan penyesuaian kecil.**`;
     }
     
     return recommendation || 'Kondisi Baik, tapi ada potensi masalah yang belum terdeteksi. Periksa kembali semua parameter.';
 };
 
-//KONSEP MODUL FUNCTION & METHOD
-//LOGIKA UTAMA: MENAMBAH, MENGHAPUS, DAN MERESET DATA
+//KONSEP MODUL 4: FUNCTION & METHOD
 const addReading = () => {
     const plantName = document.getElementById('plantName').value.trim();
     const ph = parseFloat(document.getElementById('ph').value);
     const temp = parseFloat(document.getElementById('temp').value);
     const ppm = parseInt(document.getElementById('ppm').value);
 
-//KONSEP MODUL PENGKONDISIAN & TIPE DATA (isNaN)
+//KONSEP MODUL 2 & 1: PENGKONDISIAN & TIPE DATA (isNaN)
     if (!plantName || isNaN(ph) || isNaN(temp) || isNaN(ppm)) {
         alert("Mohon isi semua data dengan benar.");
         return;
     }
 
-    // 2. Hitung Skor & Detail Status
     const scoreResult = calculateDetailedScore(ph, temp, ppm);
     const score = scoreResult.totalScore;
-    const statusText = getSimpleStatus(score); // Status umum untuk judul
-    const recommendation = getDetailedRecommendation(scoreResult); // Rekomendasi spesifik
+    const statusText = getSimpleStatus(score); 
+    const recommendation = getDetailedRecommendation(scoreResult);
 
-    // 3. Simpan data ke Riwayat
     const newReading = { plantName, ph, temp, ppm, score, statusText, recommendation, details: scoreResult.details };
     historyData.push(newReading);
 
-    // 4. Perbarui Tampilan
     renderHealthCard(score, statusText, recommendation);
-    renderTable(); // renderTable akan memanggil updateMaintenanceQueue
+    renderTable(); 
+
 };
 
-//KONSEP MODUL FUNCTION & METHOD, ARRAY : menghapus satu baris data riwayat
+//KONSEP MODUL 4 & 1: FUNCTION & METHOD, ARRAY 
 const deleteReading = (displayIndex) => {
-    // Menghitung indeks aktual di array historyData (karena tabel dirender terbalik)
+
     const actualIndex = historyData.length - displayIndex; 
     
     if (actualIndex >= 0 && actualIndex < historyData.length) {
         historyData.splice(actualIndex, 1);
         renderTable();
 
-    // Setelah penghapusan, perbarui kartu kesehatan ke data terakhir, atau ke tampilan awal jika kosong
         if (historyData.length > 0) {
             const lastReading = historyData[historyData.length - 1];
             renderHealthCard(lastReading.score, lastReading.statusText, lastReading.recommendation);
@@ -142,7 +137,6 @@ const deleteReading = (displayIndex) => {
     }
 };
 
-////KONSEP MODUL FUNCTION & METHOD, VARIABEL
 const resetData = () => {
     if (confirm("Apakah Anda yakin ingin menghapus semua Riwayat Pemantauan?")) {
         historyData = [];
@@ -159,35 +153,34 @@ const processNext = () => {
         alert(`Sedang mensimulasikan penanganan masalah untuk ${criticalItem.split(':')[0].trim()}. 
         Asumsi: Tindakan korektif sudah dilakukan. Anda harus memasukkan data baru setelah koreksi.`);
        
-// KONSEP: GUI PROGRAMMING (DOM Manipulation)
-        // Dalam implementasi sederhana ini, kita hanya akan mereset tampilan antrian
-        // untuk menunjukkan bahwa item telah "ditangani" secara simulatif.
+// KONSEP MODUL 8: GUI PROGRAMMING
         queueList.innerHTML = '<li style="color:var(--color-muted)">Item utama sudah diproses. Masukkan data baru untuk pembaruan status.</li>';
         document.getElementById('processBtn').style.opacity = '0.5';
         document.getElementById('processBtn').style.cursor = 'default';
-    } else {
+    } 
+    
+    else {
         alert("Antrian Pemeliharaan kosong atau tidak ada item yang perlu diproses!");
     }
 };
 
 
-//KONSEP: GUI PROGRAMMING (DOM Manipulation): untuk merender tampilan
+//KONSEP Modul 8: GUI PROGRAMMING 
 const renderHealthCard = (score, statusText, recommendation) => {
     document.getElementById('score').textContent = score;
     document.getElementById('statusText').textContent = statusText;
-    // Menggunakan innerHTML karena rekomendasi mengandung tag <br> dan **
     document.getElementById('recommend').innerHTML = recommendation; 
 };
 const renderTable = () => {
     const historyBody = document.getElementById('historyBody');
     historyBody.innerHTML = '';
     
- //KONSEP: PERULANGAN (FOR Loop - Menurun)
+ //KONSEP MODUL 3: PERULANGAN 
     for (let i = historyData.length - 1; i >= 0; i--) {
         const r = historyData[i];
         const displayIndex = historyData.length - i; 
 
-//KONSEP: GUI PROGRAMMING (DOM Manipulation - Menambah baris HTML)
+//KONSEP MODUL 8: GUI PROGRAMMING 
         historyBody.innerHTML += `
             <tr>
               <td>${displayIndex}</td>
@@ -205,19 +198,16 @@ const renderTable = () => {
             </tr>
         `;
     }
-    
-    // Panggil fungsi antrian setelah tabel diperbarui
+ 
     updateMaintenanceQueue();
 };
 
-//merender antrian pemeliharaan
 const renderQueue = (queue) => {
     const queueList = document.getElementById('queueList');
     queueList.innerHTML = '';
     
     if (queue.length === 0) {
-        queueList.innerHTML = '<li style="color:var(--color-muted)">Antrian kosong. Semua optimal atau baik.</li>';
-        // Nonaktifkan tombol
+        queueList.innerHTML = '<li style="color:var(--color-primary)">Antrian kosong. Semua optimal atau baik.</li>';
         document.getElementById('processBtn').style.opacity = '0.5';
         document.getElementById('processBtn').style.cursor = 'default';
     } else {
@@ -229,45 +219,35 @@ const renderQueue = (queue) => {
                 </li>
             `;
         });
-        // Aktifkan tombol
         document.getElementById('processBtn').style.opacity = '1';
         document.getElementById('processBtn').style.cursor = 'pointer';
     }
 };
 
-// KONSEP: FUNGSI (Method) & STRUKTUR DATA QUEUE (Simulasi Antrian/Prioritas)
+// KONSEP MODUL 4 & 7: FUNGSI (Method) & STRUKTUR DATA QUEUE
 const updateMaintenanceQueue = () => {
-    // 1. Ambil hanya data terakhir (terbaru) dari setiap nama tanaman
     const latestReadings = {};
     historyData.forEach(r => {
-        // Data terbaru akan menimpa data lama dengan nama tanaman yang sama
         latestReadings[r.plantName] = r; 
     });
 
-    // 2. Filter yang tidak optimal dan urutkan
     const queue = Object.values(latestReadings)
-        .filter(r => r.score < 85) // Hanya masukkan yang 'Baik, Perlu Dicek' atau 'Kritis'
-        .sort((a, b) => a.score - b.score); // Urutkan dari skor terendah (paling kritis, prioritas tinggi)
-
+        .filter(r => r.score < 85) 
+        .sort((a, b) => a.score - b.score); 
     renderQueue(queue);
 };
 
 
-// 4. EVENT LISTENERS (Menghubungkan tombol dengan fungsi)
+
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addBtn').addEventListener('click', addReading);
     
-    // --- Menghubungkan Tombol Reset ---
     document.getElementById('resetBtn').addEventListener('click', resetData);
-    document.getElementById('resetBtn').style.opacity = '1'; // Aktifkan Tampilan
-    document.getElementById('resetBtn').style.cursor = 'pointer'; // Aktifkan Kursor
+    document.getElementById('resetBtn').style.opacity = '1'; 
+    document.getElementById('resetBtn').style.cursor = 'pointer'; 
     
-    // --- Menghubungkan Tombol Process Next ---
     document.getElementById('processBtn').addEventListener('click', processNext);
-    // Tampilan awal tombol Process Next diatur di renderQueue()
 
-    // Atur tampilan awal
     renderHealthCard('—', 'Belum ada data.', 'Masukkan data untuk melihat saran dan detail diagnostik.');
-    // Set tampilan awal untuk antrian
     renderQueue([]); 
 });
