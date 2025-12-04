@@ -23,7 +23,6 @@ const calculateDetailedScore = (ph, temp, ppm) => {
     let score = 0;
     const details = {}; 
 
-    // SKOR PH 
     if (ph >= IDEAL.PH_MIN && ph <= IDEAL.PH_MAX) {
         score += IDEAL.SCORE_PER_PARAM;
         details.phStatus = 'Optimal';
@@ -34,7 +33,7 @@ const calculateDetailedScore = (ph, temp, ppm) => {
         details.phStatus = 'Kritis';
     }
 
-    // SKOR SUHU
+
     if (temp >= IDEAL.TEMP_MIN && temp <= IDEAL.TEMP_MAX) {
         score += IDEAL.SCORE_PER_PARAM;
         details.tempStatus = 'Optimal';
@@ -45,7 +44,6 @@ const calculateDetailedScore = (ph, temp, ppm) => {
         details.tempStatus = 'Kritis';
     }
 
-    // SKOR PPM 
     if (ppm >= IDEAL.PPM_MIN && ppm <= IDEAL.PPM_MAX) {
         score += IDEAL.SCORE_PER_PARAM;
         details.ppmStatus = 'Optimal';
@@ -107,21 +105,15 @@ const addReading = () => {
         return;
     }
     
-    // START MODIFIKASI: Validasi usia (harus >= 0)
     if (age < 0) {
         alert("Usia (hari) tidak boleh bernilai negatif. Nilai minimal adalah 0.");
         return;
     }
-    // END MODIFIKASI
 
-    // ... (sisa fungsi tetap sama) ...
-    
     const scoreResult = calculateDetailedScore(ph, temp, ppm);
     const score = scoreResult.totalScore;
     const statusText = getSimpleStatus(score); 
     const recommendation = getDetailedRecommendation(scoreResult);
-
-    // Tambahkan 'age' ke objek newReading
     const newReading = { plantName, age, ph, temp, ppm, score, statusText, recommendation, details: scoreResult.details };
     historyData.push(newReading);
 
@@ -129,31 +121,19 @@ const addReading = () => {
     renderTable(); 
 };
 
-// MODIFIKASI: Fungsi editReading yang menghapus data lama dan mengisi form
 const editReading = (displayIndex) => {
     const actualIndex = historyData.length - displayIndex;
     
     if (actualIndex >= 0 && actualIndex < historyData.length) {
         const itemToEdit = historyData[actualIndex];
         
-        // 1. ISI FORM INPUT DENGAN DATA YANG INGIN DIEDIT
         document.getElementById('plantName').value = itemToEdit.plantName;
         document.getElementById('ph').value = itemToEdit.ph;
         document.getElementById('temp').value = itemToEdit.temp;
         document.getElementById('ppm').value = itemToEdit.ppm;
-        
-        // Tambahan: Isi Type dan Age (jika ada)
-        // document.getElementById('plantType').value = itemToEdit.plantType || '';
-        // document.getElementById('age').value = itemToEdit.age || '';
-
-
-        // 2. HAPUS DATA LAMA DARI ARRAY
         historyData.splice(actualIndex, 1);
-        
-        // 3. RENDER ULANG TABEL DAN HEALTH CARD
         renderTable(); 
         
-        // Perbarui Health Card berdasarkan data terakhir yang tersisa (jika ada)
         if (historyData.length > 0) {
             const lastReading = historyData[historyData.length - 1];
             renderHealthCard(lastReading.score, lastReading.statusText, lastReading.recommendation);
@@ -219,7 +199,6 @@ const renderHealthCard = (score, statusText, recommendation) => {
     document.getElementById('recommend').innerHTML = recommendation; 
 };
 
-// MODIFIKASI: Menambahkan tombol Edit di samping Hapus
 const renderTable = () => {
     const historyBody = document.getElementById('historyBody');
     historyBody.innerHTML = '';
@@ -254,7 +233,6 @@ const renderTable = () => {
  
     updateMaintenanceQueue();
 };
-// AKHIR MODIFIKASI renderTable
 
 const renderQueue = (queue) => {
     const queueList = document.getElementById('queueList');

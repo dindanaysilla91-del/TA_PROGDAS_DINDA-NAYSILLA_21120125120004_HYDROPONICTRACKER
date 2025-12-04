@@ -1,7 +1,5 @@
 
-/* 1. VARIBEL & RESET*/
 :root {
-    /* Warna Palet */
     --color-bg: #eaf9ea;
     --color-card: #ffffffcc;
     --color-primary: #34a853;     
@@ -10,7 +8,7 @@
     --color-warning: #e0a800;
     --color-critical: #c23616;
     
-    /* Spasi & Radius */
+ 
     --space-md: 20px;
     --space-sm: 10px;
     --radius-lg: 14px;
@@ -25,8 +23,6 @@ html, body {
     background: linear-gradient(180deg, var(--color-bg), #dff1df);
 }
 
-
-/* 2. LAYOUT & CONTAINER*/
 .container {
     max-width: 1200px;
     margin: 36px auto;
@@ -53,9 +49,6 @@ h1 {
     }
 }
 
-
-/* 3. KOMPONEN KARTU (CARD)*/
-
 .card {
     background: var(--color-card);
     border-radius: var(--radius-lg);
@@ -72,7 +65,6 @@ h1 {
     box-shadow: 0 4px 18px rgba(31, 111, 63, 0.04);
 }
 
-/*Kartu Kesehatan Tanaman*/
 .health {
     text-align: center;
     padding: 18px;
@@ -96,7 +88,6 @@ h1 {
     font-size: 14px;
 }
 
-/* Tombol */
 .btn {
     padding: 12px 14px;
     border-radius: var(--radius-md);
@@ -125,8 +116,6 @@ h1 {
     box-shadow: none;
 }
 
-/* 4. FORM (INPUT)*/
-
 .form-row, .form-row-top {
     display: flex;
     gap: 30px;
@@ -153,9 +142,7 @@ input[type="text"], input[type="number"], select {
     background: white;
     font-size: 14px;
 }
-
-
-/*5. TABEL & BADGE*/    
+ 
 
 .table-wrap {
     overflow: auto;
